@@ -1,3 +1,26 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import ddf.minim.*; 
+import ddf.minim.analysis.*; 
+import ddf.minim.effects.*; 
+import ddf.minim.signals.*; 
+import ddf.minim.spi.*; 
+import ddf.minim.ugens.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class Cutups extends PApplet {
+
 /*
     Cutups by Martin Zaltz Austwick
  Written in Java-Processing with the Minim library
@@ -5,12 +28,12 @@
  */
 
 
-import ddf.minim.*;
-import ddf.minim.analysis.*;
-import ddf.minim.effects.*;
-import ddf.minim.signals.*;
-import ddf.minim.spi.*;
-import ddf.minim.ugens.*;
+
+
+
+
+
+
 
 int sample = 10;
 
@@ -27,9 +50,9 @@ String [] filenames;
 Boolean loaded = false;
 
 
-void setup()
+public void setup()
 {
-  size(800, 800);
+  
   tracking = loadTable("tracking.csv", "header");
   minim = new Minim(this);
 
@@ -69,7 +92,7 @@ void setup()
 
 //}
 
-void draw()
+public void draw()
 {
 
   background(0);
@@ -84,12 +107,12 @@ void draw()
   //println(frameRate);
 }
 
-void randomer()
+public void randomer()
 {
   noLoop();
 
   //start time in s
-  startTime = int(random(120.0, (interview.length()/1000)-sample));
+  startTime = PApplet.parseInt(random(120.0f, (interview.length()/1000)-sample));
 
   interview.setLoopPoints(startTime*1000, (startTime+sample)*1000);
   interview.loop();
@@ -98,25 +121,25 @@ void randomer()
   loop();
 }
 
-void randomFile()
+public void randomFile()
 {
   noLoop();
   if (!(interview==null)) interview.close();
   System.gc();
-  name = filenames[floor(random(0.001, filenames.length)-0.000000001)];
+  name = filenames[floor(random(0.001f, filenames.length)-0.000000001f)];
   println(name);   
   interview = minim.loadFile(folderPath + name);
   loop();
 }
 
-void loadPreferences()
+public void loadPreferences()
 {
     JSONObject prefs = loadJSONObject("preferences.json");
     folderPath = prefs.getString("path");
     sample = prefs.getInt("sampleLength");
 }
 
-void keyPressed()
+public void keyPressed()
 {
   if (key=='r')
   {
@@ -136,5 +159,15 @@ void keyPressed()
     tee.setString("timestart", time);
     tee.setInt("duration", sample);
     saveTable(tracking, "data/tracking.csv");
+  }
+}
+  public void settings() {  size(800, 800); }
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "Cutups" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
   }
 }
